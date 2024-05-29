@@ -34,6 +34,11 @@ const App = () => {
       }
       // Add name if not in the persons array
       setPersons(persons.concat(newPersonObject))
+      axios
+        .post('http://localhost:3001/persons', newPersonObject)
+        .then(response => {
+          console.log('[POST][RESPONSE]', response)
+        })
     }
     setNewName('')
     setNewNumber('')
