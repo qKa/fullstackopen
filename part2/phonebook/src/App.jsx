@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import axios from 'axios'
+import personsService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -34,11 +35,7 @@ const App = () => {
       }
       // Add name if not in the persons array
       setPersons(persons.concat(newPersonObject))
-      axios
-        .post('http://localhost:3001/persons', newPersonObject)
-        .then(response => {
-          console.log('[POST][RESPONSE]', response)
-        })
+      personsService.create(newPersonObject)
     }
     setNewName('')
     setNewNumber('')
