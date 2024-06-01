@@ -24,10 +24,26 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
     // Check if name (newName) already exists in the persons array
-    const nameExists = persons.some(person => person.name === newName)
+    const nameExists = persons.find(person => person.name === newName)
 
     if (nameExists) {
-      alert(`${newName} is already added to phonebook`)
+      if (nameExists.number === newNumber) {
+        alert(`${nameExists.name} is already added to phonebook`)
+      } else {
+        // Confirm with the user to replace the old number with the new one
+        if (window.confirm(`${nameExists.name} is already added to the phonebook, replace the old number with a new one?`)) {
+          const updatedPerson = { ...nameExists, number: newNumber }
+          personsService.update(nameExists.id, updatedPerson)
+            .then(response => {
+              setPersons(persons.map(person => person.id !== nameExists.id ? person : response.data))
+              setNewName('')
+              setNewNumber('')
+            })
+            .catch(error => {
+              console.error('Error updating person:', error)
+            })
+        }
+      }
     } else {
       const newPersonObject = {
         id: persons.length + 1,
@@ -35,11 +51,16 @@ const App = () => {
         number: newNumber
       }
       // Add name if not in the persons array
-      setPersons(persons.concat(newPersonObject))
       personsService.create(newPersonObject)
+        .then(response => {
+          setPersons(persons.concat(response.data)) // check
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          console.error('Error adding new person:', error)
+        })
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   const deletePerson = (id) => {
