@@ -6,7 +6,7 @@ import personsService from './services/persons'
 import Notification from './components/Notification'
 
 const App = () => {
-  const [persons, setPersons] = useState([])
+  const [persons, setPersons] = useState(null)
 
   useEffect(() => {
     personsService.getAll()
@@ -120,6 +120,10 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value)
+  }
+
+  if (persons === null) {
+    return null
   }
 
   const personsToShow = persons.filter(person =>
