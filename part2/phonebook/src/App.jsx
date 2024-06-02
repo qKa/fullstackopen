@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personsService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -20,6 +21,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState({ message: null, type: '' })
 
   const addName = (event) => {
     event.preventDefault()
@@ -36,6 +38,10 @@ const App = () => {
           personsService.update(nameExists.id, updatedPerson)
             .then(response => {
               setPersons(persons.map(person => person.id !== nameExists.id ? person : response.data))
+              setNotification({ message: `Number changed for ${updatedPerson.name}`, type: 'success' })
+              setTimeout(() => {
+                setNotification({ message: null, type: '' })
+              }, 5000)
               setNewName('')
               setNewNumber('')
             })
@@ -46,14 +52,18 @@ const App = () => {
       }
     } else {
       const newPersonObject = {
-        id: persons.length + 1,
+        // id: persons.length + 1, // let the server generate a random id
         name: newName,
         number: newNumber
       }
       // Add name if not in the persons array
       personsService.create(newPersonObject)
         .then(response => {
-          setPersons(persons.concat(response.data)) // check
+          setPersons(persons.concat(response.data))
+          setNotification({ message: `Added ${response.data.name}`, type: 'success' })
+          setTimeout(() => {
+            setNotification({ message: null, type: '' })
+          }, 5000)
           setNewName('')
           setNewNumber('')
         })
@@ -71,7 +81,11 @@ const App = () => {
         .remove(id)
         .then(response => {
           setPersons(persons.filter(person => person.id !== id))
-          console.log(`${response.data.name} deleted`)
+          // console.log(`${response.data.name} deleted`)
+          setNotification({ message: `${response.data.name} deleted`, type: 'success' })
+          setTimeout(() => {
+            setNotification({ message: null, type: '' })
+          }, 5000)
         })
         .catch(error => {
           console.error('Error deleting person:', error)
@@ -99,6 +113,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification.message} type={notification.type} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
