@@ -14,7 +14,11 @@ const App = () => {
         setPersons(response.data)
       })
       .catch(error => {
-        console.error('Error fetching persons:', error)
+        // console.error('Error fetching persons:', error)
+        setNotification({ message: `Error retrieving data from the /persons API endpoint`, type: 'error' })
+        setTimeout(() => {
+          setNotification({ message: null, type: '' })
+        }, 5000)
       })
   }, [])
 
@@ -38,7 +42,7 @@ const App = () => {
           personsService.update(nameExists.id, updatedPerson)
             .then(response => {
               setPersons(persons.map(person => person.id !== nameExists.id ? person : response.data))
-              setNotification({ message: `Number changed for ${updatedPerson.name}`, type: 'success' })
+              setNotification({ message: `Number changed for ${response.data.name}`, type: 'success' })
               setTimeout(() => {
                 setNotification({ message: null, type: '' })
               }, 5000)
@@ -46,7 +50,11 @@ const App = () => {
               setNewNumber('')
             })
             .catch(error => {
-              console.error('Error updating person:', error)
+              // console.error('Error updating person:', error)
+              setNotification({ message: `Error updating ${updatedPerson.name}`, type: 'error' })
+              setTimeout(() => {
+                setNotification({ message: null, type: '' })
+              }, 5000)
             })
         }
       }
@@ -68,7 +76,11 @@ const App = () => {
           setNewNumber('')
         })
         .catch(error => {
-          console.error('Error adding new person:', error)
+          // console.error('Error adding new person:', error)
+          setNotification({ message: `Error adding new person: ${newPersonObject.name}`, type: 'error' })
+          setTimeout(() => {
+            setNotification({ message: null, type: '' })
+          }, 5000)
         })
     }
   }
@@ -88,7 +100,11 @@ const App = () => {
           }, 5000)
         })
         .catch(error => {
-          console.error('Error deleting person:', error)
+          // console.error('Error deleting person:', error)
+          setNotification({ message: `Information of ${person.name} has already been removed from server`, type: 'error' })
+          setTimeout(() => {
+            setNotification({ message: null, type: '' })
+          }, 5000)
         })
     }
   }
