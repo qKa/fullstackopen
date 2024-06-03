@@ -1,7 +1,7 @@
 import Country from './Country'
 import CountryDetails from './CountryDetails'
 
-const Countries = ({ filteredCountries }) => {
+const Countries = ({ filteredCountries, onShowDetails }) => {
     if (filteredCountries.length > 10) {
         return <div>Too many matches, specify another filter</div>
     }
@@ -13,7 +13,7 @@ const Countries = ({ filteredCountries }) => {
     return (
         <div>
             {filteredCountries.map(country => (
-                <Country key={country.cca3} country={country} />
+                <Country key={country.cca3} country={country} onShowDetails={onShowDetails} />
             ))}
         </div>
     )
