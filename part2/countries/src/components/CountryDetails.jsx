@@ -1,4 +1,5 @@
 import Languages from './CountryDetailsLanguages'
+import Weather from './CountryDetailsWeather'
 
 const CountryDetails = ({ country }) => {
     return (
@@ -8,6 +9,7 @@ const CountryDetails = ({ country }) => {
             <div>Area: {country.area}</div>
             <Languages country={country} />
             <img className={`img flag`} src={country.flags.png} alt={country.flags.alt}></img>
+            <Weather capital={country.capital} />
         </div>
     )
 }
